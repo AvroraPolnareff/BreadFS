@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BreadFS", "BreadFS\BreadFS.fsproj", "{0865CD6F-57FC-4AD9-9B53-17E37973A598}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Discord.Net.FSharp", "Discord.Net.FSharp\Discord.Net.FSharp.fsproj", "{F8334987-3764-4EF5-99B3-BEC08ACD99FC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0865CD6F-57FC-4AD9-9B53-17E37973A598}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0865CD6F-57FC-4AD9-9B53-17E37973A598}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0865CD6F-57FC-4AD9-9B53-17E37973A598}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0865CD6F-57FC-4AD9-9B53-17E37973A598}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8334987-3764-4EF5-99B3-BEC08ACD99FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8334987-3764-4EF5-99B3-BEC08ACD99FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8334987-3764-4EF5-99B3-BEC08ACD99FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8334987-3764-4EF5-99B3-BEC08ACD99FC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

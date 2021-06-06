@@ -8,12 +8,12 @@
 
     <ItemGroup>
         <Content Include="appsettings.json" />
-        <Compile Include="AssemblyInfo.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Discord.Net" Version="2.4.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
         <PackageReference Include="Ply" Version="0.3.1" />
     </ItemGroup>
 

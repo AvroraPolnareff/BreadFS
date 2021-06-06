@@ -9,14 +9,15 @@
     <ItemGroup>
         <Compile Include="Core.fs" />
         <Compile Include="Handlers.fs" />
+        <Compile Include="Routing.fs" />
         <Compile Include="Hosting.fs" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Discord.Net" Version="2.4.0" />
         <PackageReference Include="Ply" Version="0.3.1" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
     </ItemGroup>
 
 </Project>

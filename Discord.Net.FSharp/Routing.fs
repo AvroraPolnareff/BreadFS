@@ -1,0 +1,2 @@
+namespace Discord.Net.FSharp
+

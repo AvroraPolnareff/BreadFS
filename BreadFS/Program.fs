@@ -11,11 +11,15 @@ open Discord.Net.FSharp.Hosting
 
 let inline ( ^ ) f x = f x
 
+let messageHandler : MessageHandler =
+    MessageHandlers.choose [
+        MessageHandlers.command ^ CommandHandlers.command1 "say" MessageHandlers.reply
+    ]
+
 let handler =
-    messageReceived ^fun msg ->
-        if msg.Content = "ping" then
-            sendMessageToChannel "pong!" msg.Channel
-        else id
+    DiscordHandlers.messageReceived messageHandler
+
+
 
 let configureServices (ctx: HostBuilderContext) (services: IServiceCollection) : unit =
     let token = ctx.Configuration.["Discord:Token"]

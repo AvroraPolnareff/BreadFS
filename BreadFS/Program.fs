@@ -19,14 +19,18 @@ let handler =
 
 let configureServices (ctx: HostBuilderContext) (services: IServiceCollection) : unit =
     let token = ctx.Configuration.["Discord:Token"]
-    services.ConfigureDiscordConfiguration(token, TokenType.Bot, DiscordSocketConfig()) |> ignore
+    let discordConfig = DiscordSocketConfig(LogLevel = LogSeverity.Debug)
+    services.AddDiscordConfiguration(token, TokenType.Bot, discordConfig) |> ignore
 
+let configureDiscord (ds: IDiscordBuilder) : unit =
+    ds.UseHandler(handler) |> ignore
+    ds.UseLogging() |> ignore
 
 [<EntryPoint>]
 let main argv =
     Host.CreateDefaultBuilder(argv)
         .ConfigureServices(configureServices)
-        .ConfigureDiscord(handler)
+        .ConfigureDiscord(configureDiscord)
         .Build()
         .Run()
     0

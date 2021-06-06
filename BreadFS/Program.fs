@@ -20,7 +20,6 @@ let handler =
     DiscordHandlers.messageReceived messageHandler
 
 
-
 let configureServices (ctx: HostBuilderContext) (services: IServiceCollection) : unit =
     let token = ctx.Configuration.["Discord:Token"]
     let discordConfig = DiscordSocketConfig(LogLevel = LogSeverity.Debug)

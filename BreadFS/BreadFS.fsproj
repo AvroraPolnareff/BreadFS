@@ -6,6 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Content Include="appsettings.json" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 

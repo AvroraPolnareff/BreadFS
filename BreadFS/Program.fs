@@ -18,7 +18,7 @@ let handler =
         else id
 
 let configureServices (ctx: HostBuilderContext) (services: IServiceCollection) : unit =
-    let token = ctx.Configuration.["Token"]
+    let token = ctx.Configuration.["Discord:Token"]
     services.ConfigureDiscordConfiguration(token, TokenType.Bot, DiscordSocketConfig()) |> ignore
 
 

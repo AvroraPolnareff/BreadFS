@@ -13,7 +13,7 @@
 
     <ItemGroup>
         <PackageReference Include="Discord.Net" Version="2.4.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" /> <!-- Explicit reference for UserSecretsId identification -->
         <PackageReference Include="Ply" Version="0.3.1" />
     </ItemGroup>
 

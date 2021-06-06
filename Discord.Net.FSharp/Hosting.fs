@@ -29,13 +29,15 @@ type DiscordHostingService(handler: DiscordHandler, options: DiscordHostingServi
             | Some ctx -> ()
             | None -> logger.LogError("Discord Handler returned None")
         }
+    
+    let registerEvents (client: BaseSocketClient) =
+        let inline createHandler eventMapping = Func<_, _>(eventMapping >> handleEvent)
+        client.add_MessageReceived (createHandler DiscordEvent.MessageReceived)
 
     interface IHostedService with
         member this.StartAsync(cancellationToken) =
             unitTask {
-                let inline createHandler eventMapping = Func<_, _>(eventMapping >> handleEvent)
-                client.add_MessageReceived (createHandler DiscordEvent.MessageReceived)
-
+                registerEvents client
                 do! client.LoginAsync(options.TokenType, options.Token)
                 do! client.StartAsync()
             }

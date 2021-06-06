@@ -4,26 +4,20 @@ open System
 open Discord
 open Discord.Net.FSharp
 open Discord.WebSocket
-open Discord.WebSocket
 open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.DependencyInjection
 open FSharp.Control.Tasks
 open Microsoft.Extensions.Logging
-open Microsoft.Extensions.Options
-
 
 
 type DiscordHostingServiceOptions =
-    { Handler: DiscordHandler
-      Token: string
+    { Token: string
       Config: DiscordSocketConfig
       TokenType: TokenType }
 
-type DiscordHostingService(options: DiscordHostingServiceOptions, logger: ILogger<DiscordHostingService>) =
-    let client =
-        new DiscordSocketClient(options.Config)
+type DiscordHostingService(handler: DiscordHandler, options: DiscordHostingServiceOptions, logger: ILogger<DiscordHostingService>) =
+    let client = new DiscordSocketClient(options.Config)
 
-    let handler = options.Handler
     let func = handler earlyReturn
 
     let handleEvent event =
@@ -55,41 +49,21 @@ type DiscordHostingService(options: DiscordHostingServiceOptions, logger: ILogge
             }
 
 
-type IDiscordBuilder =
-    abstract UseHandler: handler: DiscordHttpHandler -> IDiscordBuilder
-    abstract Build: unit -> DiscordFunc
-
-type DefaultDiscordBuilder() =
-    let mutable handler = id
-    interface IDiscordBuilder with
-        member this.UseHandler(handler') =
-            handler <- handler >> handler'
-            this
-        member this.Build() =
-            handler earlyReturn
-
-
 [<AutoOpen>]
-module HostBuilderExtensions =
+module Extensions =
 
+    type IServiceCollection with
+        member this.ConfigureDiscordConfiguration(token, tokenType, config) =
+            this.AddTransient<DiscordHostingServiceOptions>(fun sp ->
+                { Token = token
+                  Config = config
+                  TokenType = tokenType }
+            )
+    
     type IHostBuilder with
-//        member this.UseDiscord(handler, token, tokenType, configureConfig) =
-//            this.ConfigureServices(fun services ->
-//                services.AddTransient<DiscordHostingServiceOptions>(fun sp ->
-//                    let config = DiscordSocketConfig()
-//                    configureConfig config
-//                    { Handler = handler
-//                      Token = token
-//                      Config = config
-//                      TokenType = tokenType }
-//                ) |> ignore
-//                services.AddHostedService<DiscordHostingService>()
-//                |> ignore
-//            )
-        member this.ConfigureDiscord(configureDiscord: IDiscordBuilder -> unit) =
-            let discorBuilder = DefaultDiscordBuilder()
-            configureDiscord discordBuilder
-            let func = discordBuilder.Build()
-
-            ()
-
+        member this.ConfigureDiscord(handler) =
+            this.ConfigureServices(fun services ->
+                services.AddHostedService<DiscordHostingService>(fun sp ->
+                    DiscordHostingService(handler, sp.GetRequiredService<_>(), sp.GetRequiredService<_>())
+                ) |> ignore
+            )

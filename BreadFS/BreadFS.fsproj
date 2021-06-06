@@ -3,10 +3,12 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net5.0</TargetFramework>
+        <UserSecretsId>13c97fe8-20b2-45a0-8541-87a579ecb91d</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
         <Content Include="appsettings.json" />
+        <Compile Include="AssemblyInfo.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
@@ -16,7 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Discord.Net.FSharp\Discord.Net.FSharp.fsproj" />
+        <ProjectReference Include="..\Discord.Net.FSharp\Discord.Net.FSharp.fsproj" />
     </ItemGroup>
 
 </Project>

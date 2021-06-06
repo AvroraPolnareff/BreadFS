@@ -4,9 +4,12 @@ open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
 open FSharp.Control.Tasks
 open Discord
-open Discord.Net.FSharp
 open Discord.WebSocket
+
+open Discord.Net.FSharp
 open Discord.Net.FSharp.Hosting
+open Discord.Net.FSharp.MessageHandling
+open Discord.Net.FSharp.CommandHandling
 
 
 let inline ( ^ ) f x = f x

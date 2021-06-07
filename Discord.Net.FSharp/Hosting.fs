@@ -36,7 +36,7 @@ type DiscordClientHostingService(options: DiscordOptions) =
 
 type DiscordHandlerService(handler: DiscordHandler, options: DiscordOptions, client: DiscordSocketClient, logger: ILogger<DiscordHandlerService>) =
 
-    let func = handler earlyReturn
+    let func = handler DiscordHandlers.earlyReturn
 
     let handleEvent event =
         unitTask {

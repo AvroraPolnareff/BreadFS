@@ -17,8 +17,10 @@ open Discord.Net.FSharp.CommandHandling
 let inline ( ^ ) f x = f x
 
 let messageHandler : MessageHandler =
-    MessageHandlers.choose [
-        MessageHandlers.command ^ CommandHandlers.command1 "say" MessageHandlers.reply
+    MessageHandlers.commands [
+        CommandHandlers.command1 "say" MessageHandlers.reply
+        CommandHandlers.command1 "say2" MessageHandlers.reply
+        CommandHandlers.command1 "say!" (fun arg -> MessageHandlers.reply $"{arg}!")
     ]
 
 let handler =

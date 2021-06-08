@@ -6,34 +6,45 @@ open Discord.Net.FSharp.MessageHandling
 
 
 type CommandHandlerState =
-    { Entries: string list }
+    { Tokens: string list }
 
 type CommandHandler = CommandHandlerState -> MessageHandler * CommandHandlerState
 
 module MessageHandlers =
-    let private parseEntries (str: string) : string list =
-        let rec parseSymbols chars isQuoting : string list =
-            match chars, isQuoting with
-            | '"' :: tail, false -> "" :: parseSymbols tail true
-            | '"' :: tail, true -> parseSymbols tail false
-            | ' ' :: tail, false -> "" :: parseSymbols tail false
-            | anyChar :: tail, isQuoting ->
-                let tailEntries = parseSymbols tail isQuoting
-                match tailEntries with
-                | entry :: tailEntries' -> entry + string anyChar :: tailEntries'
-                | [] -> []
+    
+    type private TokenParsingState =
+        | Quoting
+        | InToken of isInToken: bool
+    
+    let private parseTokens (input: string) : string list =
+        let rec parse chars state : string list =
+            match chars, state with
+            | '"' :: tail, InToken _ -> parse tail Quoting
+            | '"' :: tail, Quoting -> "" :: parse tail (InToken false)
+            | anyChar :: tailChars, Quoting ->
+                let tailTokens = parse tailChars Quoting
+                match tailTokens with
+                | token :: tailTokens' -> string anyChar + token :: tailTokens'
+                | [] -> [string anyChar]
+            
+            | ' ' :: tail, InToken false -> parse tail (InToken false)
+            | ' ' :: tail, InToken true -> "" :: parse tail (InToken false)
+            | anyChar :: tailChars, InToken true ->
+                let tailTokens = parse tailChars (InToken true)
+                match tailTokens with
+                | token :: tailTokens' -> string anyChar + token :: tailTokens'
+                | [] -> [string anyChar]
+            | chars, InToken false -> parse chars (InToken true)
             | [], _ -> []
-
-        let chars = List.ofSeq str
-        let entriesRev = parseSymbols chars false
-        List.rev entriesRev
-        // TODO
-        raise (NotImplementedException())
         
+        let chars = List.ofSeq input
+        parse chars (InToken false)
+    
+    
     let command (cmdHandler: CommandHandler) : MessageHandler =
         fun msg ->
-            let entries = parseEntries msg.Content
-            let state = { Entries = entries }
+            let tokens = parseTokens msg.Content
+            let state = { Tokens = tokens }
             let msgHandler, _newState = cmdHandler state
             msgHandler msg
 
@@ -52,10 +63,10 @@ module CommandHandlers =
     
     let command1 (pattern: string) (cont: string -> MessageHandler) : CommandHandler =
         fun state ->
-            match state.Entries with
+            match state.Tokens with
             | command :: arg :: tail ->
                 if command = pattern then
-                    let newState = { Entries = tail }
+                    let newState = { Tokens = tail }
                     let msgHandler = cont arg
                     msgHandler, newState
                 else
@@ -64,9 +75,9 @@ module CommandHandlers =
 
     let subCommand (pattern: string) (innerCmdHandler: CommandHandler) : CommandHandler =
         fun state ->
-            match state.Entries with
+            match state.Tokens with
             | Eq pattern :: tail ->
-                let state' = { Entries = tail }
+                let state' = { Tokens = tail }
                 innerCmdHandler state'
             | _ -> skip, state
 

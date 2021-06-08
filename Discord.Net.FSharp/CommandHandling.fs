@@ -18,28 +18,24 @@ module MessageHandlers =
     
     let private parseTokens (input: string) : string list =
         let rec parse chars state : string list =
+            let processSingleToken ch tailChars state =
+                let tailTokens = parse tailChars state
+                match tailTokens with
+                | token :: tailTokens' -> string ch + token :: tailTokens'
+                | [] -> [string ch]
             match chars, state with
             | '"' :: tail, InToken _ -> parse tail Quoting
             | '"' :: tail, Quoting -> "" :: parse tail (InToken false)
-            | anyChar :: tailChars, Quoting ->
-                let tailTokens = parse tailChars Quoting
-                match tailTokens with
-                | token :: tailTokens' -> string anyChar + token :: tailTokens'
-                | [] -> [string anyChar]
+            | ch :: tailChars, Quoting -> processSingleToken ch tailChars Quoting
             
             | ' ' :: tail, InToken false -> parse tail (InToken false)
             | ' ' :: tail, InToken true -> "" :: parse tail (InToken false)
-            | anyChar :: tailChars, InToken true ->
-                let tailTokens = parse tailChars (InToken true)
-                match tailTokens with
-                | token :: tailTokens' -> string anyChar + token :: tailTokens'
-                | [] -> [string anyChar]
+            | ch :: tailChars, InToken true -> processSingleToken ch tailChars (InToken true)
             | chars, InToken false -> parse chars (InToken true)
             | [], _ -> []
         
         let chars = List.ofSeq input
         parse chars (InToken false)
-    
     
     let command (cmdHandler: CommandHandler) : MessageHandler =
         fun msg ->
